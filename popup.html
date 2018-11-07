@@ -8,19 +8,27 @@ found in the LICENSE file. -->
   <style>
 
   </style>
+ <link rel="stylesheet" href="/pages/css/popup.css" type="text/css" />
 </head>
 
 <body>
-  撥號話機:<input type="text" id="stationid" value="6302"></br>
+  撥號話機:<input type="text" id="stationid" readonly=true><br/><!--value="6302"-->
   <!--撥號話機-->
-  目標號碼:<input type="text" id="destinationid" value="5742"></br>
+  目標號碼:<input type="text" id="destinationid" readonly=true><br/><!--value="5742"-->
   <!--目標號碼-->
-  使用者帳號:<input type="text" id="name" value="demo"></br>
+  使用者帳號:<input type="text" id="name" readonly=true><br/><!--value="demo"  placeholder="例如:https://www.google.com.tw/"-->
   <!--使用者帳號-->
-  <button id='cancelAlarm'>打電話</button>
+  <button id='makecall'>打電話</button>
+  <button id='endcall' style="display:none">掛斷</button>
+  <p id='showtext' style="color:red"></p><br/>
+  <p>點選下方齒輪即可設定</p>
+  <div>
+      <!--<img src="/images/option.jpeg" alt="選項" id='dataoption'>-->
+      <a href="options.html" target = "_blank" id="optionhref"><img src="/images/option.jpeg" alt="選項" id="dataoption" border="0"></a>
+  </div>
   <!-- link to non-persistent background script -->
-  <script src="/pages/scripts/jquery/jquery-1.9.0.min.js"></script>
-  <script src="popup.js"></script>
+  <script type="text/javascript" src="/pages/scripts/jquery/jquery-1.9.0.min.js"></script>
+  <script type="text/javascript" src="popup.js"></script> 
 </body>
 
 </html>

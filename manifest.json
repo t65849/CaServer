@@ -1,11 +1,11 @@
 {
-    "name": "Extension測試",
+    "name": "CaServer Chrome Extension",
     "version": "1.0",
-    "description": "A plain text description",
-    "permissions": ["storage", "activeTab","http://localhost/*","http://127.0.0.1/*","http://127.0.0.1:1337/*","http://127.0.0.1/*"],
+    "description": "tsti大世科 CaServer Chrome Extension",
+    "permissions": ["storage", "contextMenus", "activeTab","http://localhost/*","http://127.0.0.1/*","http://127.0.0.1:1337/*","http://127.0.0.1/*"],
     "background": {
         "scripts": ["background.js","/pages/scripts/jquery/jquery-1.9.0.min.js"],
-        "persistent": false
+        "persistent": true
     },
     "browser_action": {
         "default_popup": "popup.html",
