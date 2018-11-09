@@ -5,7 +5,7 @@ function genericOnClick(info, tab) {
 
 function createMenus() {
     var parent = chrome.contextMenus.create({
-        "title": "撥打分機給%s",
+        "title": "使用分機撥打電話給Chrome Extension", //撥打分機給%s
         "contexts": ['all'],    
         "onclick": genericOnClick
     });
