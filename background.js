@@ -47,6 +47,7 @@ function callout(destination){
                 dataType: 'json',
                 success: function (reg) {
                     console.log(JSON.stringify(reg));
+                    $('#endcall').toggle();
                     /*
                     reg.success
                     reg.callid
@@ -57,7 +58,33 @@ function callout(destination){
             });
         }else{
             alert('你未設定撥號話機，請設定撥號話機');
-            chrome.tabs.create({url: chrome.extension.getURL('options.html')});
+            chrome.tabs.create({
+                url: chrome.extension.getURL('options.html')
+            });
         }
     });
 };
+
+chrome.runtime.onInstalled.addListener(function () {
+    chrome.runtime.onMessage.addListener(
+        function (request, sender, sendResponse) {
+            chrome.storage.sync.set({
+                text: request.text
+            }, function () {
+                console.log("The color is green.");
+                console.log(sender.tab ?
+                    "来自内容脚本：" + sender.tab.url :
+                    "来自扩展程序");
+                console.log(request.text);
+                chrome.contextMenus.removeAll(function () {
+                    if (!isNaN(request.text)) {
+                        createMenus();
+                    }
+                });
+
+            });
+            sendResponse({
+                farewell: "已收到"
+            });
+        });
+});
