@@ -1,20 +1,26 @@
 // Saves options to chrome.storage
 function save_options() {
     var stationid = document.getElementById('stationid').value;
-    var destinationid = document.getElementById('destinationid').value;
+    var caserverurl = document.getElementById('caserverurl').value;
     var name = document.getElementById('name').value;
-    if(stationid !== '' && destinationid !== '' && name !==''){
+    if(caserverurl.slice(-1) == '/'){ //取得最後面的'/'
+        var urllength = caserverurl.length;
+        caserverurl = caserverurl.slice(0, urllength-1); //去掉url最後面的'/'
+        document.getElementById('caserverurl').value = caserverurl;
+    }
+    if(stationid !== '' && name !=='' && caserverurl !==''){
         chrome.storage.local.set({
             stationid: stationid,
-            destinationid: destinationid,
+            caserverurl: caserverurl,
             name: name
         }, function() {
             // Update status to let user know options were saved.
-            var status = document.getElementById('status');
+            alert('已儲存成功');
+            /*var status = document.getElementById('status');
             status.textContent = '已儲存';
             setTimeout(function() {
                 status.textContent = '';
-            }, 1500);
+            }, 1500);*/
         });
     }else{
         alert('請填寫全部資料');
@@ -25,11 +31,11 @@ function restore_options() {
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.local.get({
         stationid:'',
-        destinationid:'',
+        caserverurl:'',
         name:''
     }, function(items) {
         document.getElementById('stationid').value = items.stationid;
-        document.getElementById('destinationid').value = items.destinationid;
+        document.getElementById('caserverurl').value = items.caserverurl;
         document.getElementById('name').value = items.name;
     });
 }
