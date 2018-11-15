@@ -191,7 +191,10 @@ function checkStatus() {
                 } else {
                     $('#showtext').text("檢查連線中...");
                     if(secondcount<=10){
-                        setTimeout(checkStatus,1000);
+                        //setTimeout(checkStatus,1000);
+                        setTimeout(function(){
+                            return checkStatus()
+                        },1000);
                     }else{
                         $('#showtext').text("連線失敗!");
                     }
@@ -231,9 +234,6 @@ function checkStatus() {
                         break;
                     case "oncallring": //響鈴中
                         //do
-                        break;
-                    case undefined:
-                        setTimeout(checkStatus, 1000);
                         break;
                     default:
                     //do
