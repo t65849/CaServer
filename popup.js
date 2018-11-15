@@ -3,6 +3,7 @@ var destinationid = '';
 var name = '';
 var callid = '';
 var caserverurl = '';
+var secondcount = 0;
 
 chrome.storage.local.get({
     stationid: '',
@@ -175,6 +176,7 @@ function checkStatus() {
             "cache-control": "no-cache"
         },
         success: function (reg) {
+            //alert(JSON.stringify(reg));
             /*{
                 "success": true,
                 "status": {
@@ -184,8 +186,17 @@ function checkStatus() {
                 }
             }*/
             if (reg.success === false) {
-                $('#showtext').text("檢查連線中...");
-                return checkStatus();
+                if(name =='' || stationid == ''){
+                    $('#showtext').text("請檢查撥號話機和使用者帳號!");
+                } else {
+                    $('#showtext').text("檢查連線中...");
+                    if(secondcount<=10){
+                        setTimeout(checkStatus,1000);
+                    }else{
+                        $('#showtext').text("連線失敗!");
+                    }
+                    //return checkStatus();
+                }
             } else {
                 var callstatus = reg.status.status;
                 callid = reg.status.callid;
@@ -220,6 +231,9 @@ function checkStatus() {
                         break;
                     case "oncallring": //響鈴中
                         //do
+                        break;
+                    case undefined:
+                        setTimeout(checkStatus, 1000);
                         break;
                     default:
                     //do
