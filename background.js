@@ -9,7 +9,7 @@ function genericOnClick(info, tab) {
 
 function createMenus() {
     var parent = chrome.contextMenus.create({
-        "title": "使用分機撥打電話給Chrome Extension", //撥打分機給%s
+        "title": "使用分機撥打電話給%s", //撥打分機給Chrome Extension
         "contexts": ['all'],
         "onclick": genericOnClick
     });
@@ -57,6 +57,9 @@ function callout(destination) {
                     }, function () {
                         // Update status to let user know options were saved.
                     });
+                }, error: function(reg){
+                    $('#showtext').text("連線失敗!");
+                    return callout(destination);
                 }
             });
         } else {
