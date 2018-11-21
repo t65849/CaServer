@@ -59,7 +59,7 @@ function callout(destination) {
                     });
                 }, error: function(reg){
                     $('#showtext').text("連線失敗!");
-                    return callout(destination);
+                    //return callout(destination);
                 }
             });
         } else {

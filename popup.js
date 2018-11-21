@@ -64,7 +64,7 @@ $(document).ready(function () {
                         }
                     }, error: function(reg){
                         $('#showtext').text("連線失敗!");
-                        $('#makecall').trigger('click');
+                        //$('#makecall').trigger('click');
                     }
                 });
             }
