@@ -21,7 +21,7 @@ chrome.storage.local.get({
 $(document).ready(function () {
     $('#makecall').click(function () { //撥出電話
         if ($('#destinationid').val() != '') {
-            if (name === '' || stationid === '') {
+            if (name === '' || stationid === '' || caserverurl ==='') {
                 alert('你未設定撥號話機，請設定撥號話機');
                 chrome.tabs.create({
                     url: chrome.extension.getURL('options.html')
@@ -41,7 +41,7 @@ $(document).ready(function () {
                     "method": "POST",
                     headers: {
                         'accept': 'application/json',
-                        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQwNDM0NzI0LCJleHAiOjE1NDMwMjY3MjR9.WGpw02tW_1beq-CWnaF1QhkFcg5PJbWTvcV2t6Cpe5A',
+                        'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQzMjAzNDg4LCJleHAiOjE1NDU3OTU0ODh9.IBfRibqo1heFBT93Vz-mFIMlEBvycwpML4rBnC3k8rg',
                         'Content-Type': 'application/json',
                         "cache-control": "no-cache"
                     },
@@ -63,7 +63,7 @@ $(document).ready(function () {
                             return callid;
                         }
                     }, error: function(reg){
-                        $('#showtext').text("連線失敗!");
+                        $('#showtext').text("連線失敗...");
                         //$('#makecall').trigger('click');
                     }
                 });
@@ -83,7 +83,7 @@ $(document).ready(function () {
             "method": "POST",
             headers: {
                 'accept': 'application/json',
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQwNDM0NzI0LCJleHAiOjE1NDMwMjY3MjR9.WGpw02tW_1beq-CWnaF1QhkFcg5PJbWTvcV2t6Cpe5A',
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQzMjAzNDg4LCJleHAiOjE1NDU3OTU0ODh9.IBfRibqo1heFBT93Vz-mFIMlEBvycwpML4rBnC3k8rg',
                 'Content-Type': 'application/json',
                 "cache-control": "no-cache"
             },
@@ -114,7 +114,7 @@ $(document).ready(function () {
             "method": "POST",
             headers: {
                 'accept': 'application/json',
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQwNDM0NzI0LCJleHAiOjE1NDMwMjY3MjR9.WGpw02tW_1beq-CWnaF1QhkFcg5PJbWTvcV2t6Cpe5A',
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQzMjAzNDg4LCJleHAiOjE1NDU3OTU0ODh9.IBfRibqo1heFBT93Vz-mFIMlEBvycwpML4rBnC3k8rg',
                 'Content-Type': 'application/json',
                 "cache-control": "no-cache"
             },
@@ -147,7 +147,7 @@ $(document).ready(function () {
             "method": "POST",
             headers: {
                 'accept': 'application/json',
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQwNDM0NzI0LCJleHAiOjE1NDMwMjY3MjR9.WGpw02tW_1beq-CWnaF1QhkFcg5PJbWTvcV2t6Cpe5A',
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQzMjAzNDg4LCJleHAiOjE1NDU3OTU0ODh9.IBfRibqo1heFBT93Vz-mFIMlEBvycwpML4rBnC3k8rg',
                 'Content-Type': 'application/json',
                 "cache-control": "no-cache"
             },
@@ -176,7 +176,7 @@ function checkStatus() {
         "url": caserverurl + '/status/' + name + '?stationid=' + stationid,
         "method": "GET",
         headers: {
-            'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQwNDM0NzI0LCJleHAiOjE1NDMwMjY3MjR9.WGpw02tW_1beq-CWnaF1QhkFcg5PJbWTvcV2t6Cpe5A',
+            'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkZW1vIiwiaWF0IjoxNTQzMjAzNDg4LCJleHAiOjE1NDU3OTU0ODh9.IBfRibqo1heFBT93Vz-mFIMlEBvycwpML4rBnC3k8rg',
             "cache-control": "no-cache"
         },
         success: function (reg) {
@@ -190,13 +190,12 @@ function checkStatus() {
                     if(secondcount<=10){
                         secondcount++;
                         $('#showtext').text("檢查連線中...");
-                        alert(secondcount);
                         //setTimeout(checkStatus,1000);
                         setTimeout(function(){
                             return checkStatus()
                         },1000);
                     }else{
-                        $('#showtext').text("連線失敗!");
+                        $('#showtext').text("連線失敗!......");
                     }
                 }
             } else {
@@ -205,23 +204,29 @@ function checkStatus() {
                 switch (callstatus) {
                     case "oncallconnect": //通話中
                         $('#makecall').hide();
+                        $('#tstimakecall').hide();
                         $('#holdcall').show();
                         $('#retrievecall').hide();
                         $('#endcall').show();
+                        $('#tstiendcall').show();
                         $('#showtext').text("通話中~");
                         setTimeout(checkStatus, 1000);
                         break;
                     case "oncallcreate": //撥號中
                         $('#endcall').show();
+                        $('#tstiendcall').show();
                         $('#makecall').hide();
+                        $('#tstimakecall').hide();
                         $('#showtext').text("撥號中...");
                         setTimeout(checkStatus, 1000);
                         break;
                     case "oncallend": //結束
                         $('#makecall').show();
+                        $('#tstimakecall').show();
                         $('#holdcall').hide();
                         $('#retrievecall').hide();
                         $('#endcall').hide();
+                        $('#tstiendcall').hide();
                         $('#showtext').text("");
                         break;
                     case "oncallhold": //保留中
@@ -242,7 +247,8 @@ function checkStatus() {
             if(name =='' || stationid == '' || caserverurl == ''){
                 //$('#showtext').text("請檢查撥號話機和使用者帳號!");
             }else{
-                $('#showtext').text("連線失敗!");
+                $('#showtext').text("連線失敗!..........");
+                alert(JSON.stringify(reg));
                 return checkStatus();
             }
         }
