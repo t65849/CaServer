@@ -198,7 +198,6 @@ function checkStatus() {
                 //$('#showtext').text("請檢查撥號話機和使用者帳號!");
             }else{
                 $('#showtext').text("連線失敗!..........");
-                alert(JSON.stringify(reg));
                 return checkStatus();
             }
         }
