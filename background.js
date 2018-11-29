@@ -84,7 +84,12 @@ chrome.runtime.onInstalled.addListener(function () {
                 "来自内容脚本：" + sender.tab.url :
                 "来自扩展程序");
             console.log(request.text);
-
+            
+            if (request.noset == 'noset') {
+                chrome.tabs.create({
+                    url: chrome.extension.getURL('options.html')
+                });
+            }
             var text = request.text.trim().replace('-', '');
             text = text.replace('-', '');
             text = text.replace('(', '');
@@ -105,7 +110,6 @@ chrome.runtime.onInstalled.addListener(function () {
                 });
         });
 });
-
 function isMobile(text) {
     var pattern = new RegExp(/^09\d{8}$/);
     //alert('isMobile: '+text.match(pattern))
