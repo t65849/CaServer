@@ -307,8 +307,13 @@ function checkStatus() {
                 if (name == '' || stationid == '' || caserverurl == '') {
                     //$('#showtext').text("請檢查撥號話機和使用者帳號!");
                 } else {
-                    $('#showtext').text("連線失敗!..........");
-                    return checkStatus();
+                    if (secondcount <= 10) {
+                        secondcount++;
+                        $('#showtext').text("連線失敗!..........");
+                        setTimeout(function () {
+                            return checkStatus()
+                        }, 1000);
+                    } 
                 }
             }
         });
