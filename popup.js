@@ -73,8 +73,13 @@ $(document).ready(function () {
                                     }
                                 },
                                 error: function (reg) {
-                                    $('#showtext').text("連線失敗...");
-                                    checkStatus();
+                                    if (secondcount <= 10) {
+                                        secondcount++;
+                                        $('#showtext').text("連線失敗...");
+                                        setTimeout(function () {
+                                            return checkStatus()
+                                        }, 1000);
+                                    }
                                     //$('#makecall').trigger('click');
                                 }
                             });
