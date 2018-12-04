@@ -6,6 +6,7 @@ var caserverurl = '';
 var password = '';
 var secondcount = 0;
 var Mytoken = '';
+var changeevent;
 chrome.storage.local.get({
     stationid: '',
     destinationid: '',
@@ -73,12 +74,12 @@ $(document).ready(function () {
                                     }
                                 },
                                 error: function (reg) {
-                                    if (secondcount <= 10) {
+                                    if (secondcount < 1) {
                                         secondcount++;
                                         $('#showtext').text("連線失敗...");
                                         setTimeout(function () {
                                             return checkStatus()
-                                        }, 1000);
+                                        }, 200);
                                     }
                                     //$('#makecall').trigger('click');
                                 }
@@ -99,7 +100,7 @@ $(document).ready(function () {
 
 function getToken(name, password, callback) {
     $.ajax({
-        url: String(caserverurl).split('/phone')[0] + '/authenticate', //https://tstiticctcstest.herokuapp.com/phone
+        url: String(caserverurl).split('/phone')[0] + '/authenticate/login', //https://tstiticctcstest.herokuapp.com/phone
         headers: {
             'accept': 'application/json',
             'Content-Type': 'application/json',
@@ -251,13 +252,13 @@ function checkStatus() {
                         }, 1000);
                         $('#showtext').text("");
                     } else {
-                        if (secondcount <= 10) {
+                        if (secondcount < 1) {
                             secondcount++;
                             $('#showtext').text("檢查連線中...");
                             //setTimeout(checkStatus,1000);
                             setTimeout(function () {
                                 return checkStatus()
-                            }, 1000);
+                            }, 200);
                         } else {
                             $('#showtext').text("連線失敗!......");
                         }
@@ -312,12 +313,12 @@ function checkStatus() {
                 if (name == '' || stationid == '' || caserverurl == '') {
                     //$('#showtext').text("請檢查撥號話機和使用者帳號!");
                 } else {
-                    if (secondcount <= 10) {
+                   if (secondcount < 1) {
                         secondcount++;
-                        $('#showtext').text("連線失敗!..........");
+                        //$('#showtext').text("連線錯誤!..........");
                         setTimeout(function () {
                             return checkStatus()
-                        }, 1000);
+                        }, 200);
                     } 
                 }
             }
