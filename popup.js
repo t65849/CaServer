@@ -247,10 +247,13 @@ function checkStatus() {
             success: function (reg) {
                 if (reg.success === false) {
                     if (reg.message === 'Can not find station status: ' + stationid) {
-                        setTimeout(function () {
-                            return checkStatus()
-                        }, 1000);
-                        $('#showtext').text("");
+                        while(secondcount < 1){
+                            secondcount++;
+                            setTimeout(function () {
+                                return checkStatus()
+                            }, 1000);
+                            $('#showtext').text("");
+                        } //end while
                     } else {
                         if (secondcount < 1) {
                             secondcount++;
