@@ -24,6 +24,34 @@ chrome.storage.local.get({
     checkStatus(); //一啟動就執行checkStatus
 });
 
+
+
+function getToken(name, password, callback) {
+    $.ajax({
+        url: String(caserverurl).split('/phone')[0] + '/authenticate/login', //https://tstiticctcstest.herokuapp.com/phone
+        headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': "*",
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+            'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+        },
+        type: 'POST',
+        data: JSON.stringify({
+            "name": name,
+            "password": password
+        }),
+        dataType: 'json',
+        success: function (reg) {
+            console.log("token資訊: " + JSON.stringify(reg));
+            callback(reg);
+        },
+        error: function (reg) {
+            alert("伺服器錯誤..........")
+            //return callout(destination);
+        }
+    });
+}
 $(document).ready(function () {
     $('#makecall').click(function () { //撥出電話
         if ($('#destinationid').val() != '') {
@@ -97,34 +125,6 @@ $(document).ready(function () {
         }
     })
 })
-
-function getToken(name, password, callback) {
-    $.ajax({
-        url: String(caserverurl).split('/phone')[0] + '/authenticate/login', //https://tstiticctcstest.herokuapp.com/phone
-        headers: {
-            'accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': "*",
-            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-            'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
-        },
-        type: 'POST',
-        data: JSON.stringify({
-            "name": name,
-            "password": password
-        }),
-        dataType: 'json',
-        success: function (reg) {
-            console.log("token資訊: " + JSON.stringify(reg));
-            callback(reg);
-        },
-        error: function (reg) {
-            alert("伺服器錯誤..........")
-            //return callout(destination);
-        }
-    });
-}
-
 $(document).ready(function () {
     $('#holdcall').click(function () { //保留電話
         $.ajax({
@@ -155,7 +155,6 @@ $(document).ready(function () {
         });
     });
 });
-
 $(document).ready(function () {
     $('#retrievecall').click(function () { //接回電話
         $.ajax({
@@ -187,8 +186,6 @@ $(document).ready(function () {
         });
     });
 });
-
-
 $(document).ready(function () {
     $('#endcall').click(function () { //結束電話
         $.ajax({
@@ -221,6 +218,7 @@ $(document).ready(function () {
 });
 
 function checkStatus() {
+    console.log("checkStatus >......")
     chrome.storage.local.get({
         stationid: '',
         destinationid: '',

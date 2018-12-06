@@ -29,11 +29,9 @@ function save_options() {
                         status.textContent = '';
                     }, 1500);*/
                 });
-            } else
+           } else
                 alert(reg.message + "........");
-
-        })
-
+            })
     } else {
         alert('請填寫全部資料');
     }

@@ -23,11 +23,10 @@ chrome.storage.local.get({
     caserverurl = items.caserverurl;
     password = items.password;
     Mytoken = items.token;
-    checkStatus(); //一啟動就執行checkStatus
+    //checkStatus(); //一啟動就執行checkStatus
 });
 $(document).ready(function () {
     $('#tstimakecall').click(function () { //撥出電話
-
         //checkStatus(); //一啟動就執行checkStatus
         if ($('#destinationid').val() != '') {
             if (name === '' || stationid === '' || caserverurl === '' || password === '') {
@@ -98,8 +97,6 @@ $(document).ready(function () {
             $('#showtext').text("請輸入號碼");
         }
     });
-
-
 })
 
 $(document).ready(function () {
@@ -186,6 +183,7 @@ function getselecttext() {
 }
 
 function checkStatus() {
+    console.log("checkStatus");
     chrome.storage.local.get({
         stationid: '',
         destinationid: '',
@@ -199,7 +197,7 @@ function checkStatus() {
         name = items.name;
         caserverurl = items.caserverurl;
         password = items.password;
-        Mytoken = items.token;
+        //Mytoken = items.token;
         $.ajax({
             "async": true,
             "crossDomain": true,
@@ -284,7 +282,7 @@ function checkStatus() {
                         setTimeout(function () {
                             return checkStatus()
                         }, 200);
-                    } 
+                    }
                 }
             }
         });
