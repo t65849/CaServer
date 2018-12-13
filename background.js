@@ -1,9 +1,10 @@
 //createMenus();
 var testt = false;
+
 function genericOnClick(info, tab) {
     var number_destinationid = (info.selectionText ? info.selectionText : ""); //滑鼠選起來的號碼
     number_destinationid = number_destinationid.trim();
-    number_destinationid = number_destinationid.replace('(', '').replace(')', '').replace('(', '').replace(')', '').replace('-', '').replace('-', '').replace('#', ','); 
+    number_destinationid = number_destinationid.replace('(', '').replace(')', '').replace('(', '').replace(')', '').replace('-', '').replace('-', '').replace('#', ',');
     callout(number_destinationid);
 }
 
@@ -59,7 +60,8 @@ function callout(destination) {
                     }, function () {
                         // Update status to let user know options were saved.
                     });
-                }, error: function(reg){
+                },
+                error: function (reg) {
                     $('#showtext').text("連線失敗!");
                     //return callout(destination);
                 }
@@ -72,7 +74,6 @@ function callout(destination) {
         }
     });
 };
-
 
 chrome.runtime.onInstalled.addListener(function () {
     chrome.runtime.onMessage.addListener(
@@ -87,52 +88,26 @@ chrome.runtime.onInstalled.addListener(function () {
                 "来自内容脚本：" + sender.tab.url :
                 "来自扩展程序");
             console.log(request.text);
-            
+
             if (request.noset == 'noset') {
                 chrome.tabs.create({
                     url: chrome.extension.getURL('options.html')
                 });
             }
-            var text = request.text.trim().replace('-', '');
-            text = text.replace('-', '');
-            text = text.replace('(', '');
-            text = text.replace(')', '');
-            text = text.replace('#', ',');
-            if (isMobile(text) || isTel(text) || hasExtension(text) || localnumber(text)) {
+            if (request.text!="") {
                 //createMenus();
-                if(testt == false){
+                if (testt == false) {
                     createMenus();
                     testt = true;
+                    text = "";
                 }
             } else
                 chrome.contextMenus.removeAll(function () {
                     testt = false
                 });
-                sendResponse({
-                    farewell: "已收到"
-                });
+
+            sendResponse({
+                farewell: "已收到: "+ request.text
+            });
         });
 });
-function isMobile(text) {
-    var pattern = new RegExp(/^09\d{8}$/);
-    //alert('isMobile: '+text.match(pattern))
-    return text.match(pattern)
-}
-
-function isTel(text) {
-    var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8}$/);
-    //alert('isTel: '+text.match(pattern))
-    return text.match(pattern)
-}
-
-function hasExtension(text) {
-    var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8},\d{3,4}$/);
-    //alert('hasExtension: '+text.match(pattern))
-    return text.match(pattern)
-}
-
-function localnumber(text) {
-    var pattern = new RegExp(/\d{4}$/);
-    //alert('hasExtension: '+text.match(pattern))
-    return text.match(pattern)
-}

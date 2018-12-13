@@ -1,6 +1,4 @@
-$(document).mouseup(function () {
-    getselecttext();
-});
+var text = "";
 var stationid = '';
 var destinationid = '';
 var name = '';
@@ -9,6 +7,18 @@ var caserverurl = '';
 var password = '';
 var secondcount = 0;
 var Mytoken = '';
+var inIcon = false;
+$(document).click(function () {
+    getselecttext();
+});
+$(document).mousedown(function () {
+    if (!inIcon)
+        $("#gtx-call").remove();
+});
+$(document).mouseup(function () {
+    if (inIcon)
+        $("#gtx-call").remove();
+});
 chrome.storage.local.get({
     stationid: '',
     destinationid: '',
@@ -158,14 +168,6 @@ function getToken(name, password, callback) {
 }
 
 function getselecttext() {
-    var t = '';
-    if (window.getSelection) {
-        t = window.getSelection();
-    } else if (document.getSelection) {
-        t = document.getSelection();
-    } else if (window.document.selection) {
-        t = window.document.selection.createRange().text;
-    }
 
     var e = event || window.event;
     var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
@@ -173,13 +175,136 @@ function getselecttext() {
     var x = e.pageX || e.clientX + scrollX;
     var y = e.pageY || e.clientY + scrollY;
 
-    chrome.runtime.sendMessage({
-        text: String(t)
-    }, function (response) {
-        console.log(response.farewell);
-    });
+    setTimeout(function () {
+        var t;
+        if (window.getSelection) {
+            t = window.getSelection();
+        } else if (document.getSelection) {
+            t = document.getSelection();
+        } else if (window.document.selection) {
+            t = window.document.selection.createRange().text;
+        }
+        text = String(t).trim().replace('-', '');
+        text = text.replace('-', '');
+        text = text.replace('(', '');
+        text = text.replace(')', '');
+        text = text.replace('#', ',');
+        if (isMobile(text) || isTel(text) || hasExtension(text) || localnumber(text)) {
+            chrome.runtime.sendMessage({
+                text: String(text)
+            }, function (response) {
+                console.log(response.farewell);
+                var imgURL = chrome.runtime.getURL("images/images24.png");
+                console.log(imgURL)
 
 
+                $('body').append(
+                    $(document.createElement('div')) //on
+                    .attr('id', "gtx-call")
+                    .attr('style', "position: absolute; left: " + x + "px; top: " + y + "px;")
+                    .append(
+                        $(document.createElement('div')) //on
+                        .attr('id', "gtx-call-icon")
+                        .append("<img src=" + imgURL + ">")
+                        .hover(function () {
+                            inIcon = true;
+                            console.log('in')
+                        }, function () {
+                            inIcon = false;
+                            console.log('out')
+                        })
+                        .mouseup(function () {
+                            //if (text != "" && (isMobile(text) || isTel(text) || hasExtension(text) || localnumber(text))) {
+                            chrome.storage.local.get({
+                                stationid: '',
+                                name: '',
+                                caserverurl: '',
+                                token: ''
+                            }, function (items) {
+                                console.log(items.stationid);
+                                console.log(items.destinationid);
+                                console.log(items.name);
+                                stationid = items.stationid;
+                                destinationid = text;
+                                name = items.name;
+                                caserverurl = items.caserverurl;
+                                Mytoken = items.token;
+                                if (stationid !== '' && name !== '' && caserverurl !== '') {
+                                    $.ajax({
+                                        url: caserverurl + '/makecall', //https://tstiticctcstest.herokuapp.com/phone
+                                        headers: {
+                                            'accept': 'application/json',
+                                            'x-access-token': Mytoken,
+                                            'Content-Type': 'application/json',
+                                            'Access-Control-Allow-Origin': "*",
+                                            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+                                            'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+                                        },
+                                        type: 'POST',
+                                        data: JSON.stringify({
+                                            stationid: stationid,
+                                            destinationid: destinationid,
+                                            name: name
+                                        }),
+                                        dataType: 'json',
+                                        success: function (reg) {
+                                            console.log(JSON.stringify(reg));
+                                            chrome.storage.local.set({ //若成功撥出，儲存選取的號碼
+                                                destinationid: destinationid,
+                                            }, function () {
+                                                // Update status to let user know options were saved.
+                                            });
+                                        },
+                                        error: function (reg) {
+
+                                        }
+                                    });
+                                } else {
+
+                                    alert('你未設定撥號話機，請設定撥號話機');
+                                    chrome.runtime.sendMessage({
+                                        noset: 'noset'
+                                    }, function (response) {});
+                                }
+                            });
+                            //}
+                        })
+
+                    )
+                )
+
+            });
+        } else {
+            chrome.runtime.sendMessage({
+                text: ""
+            })
+        }
+    }, 50);
+
+}
+
+function isMobile(text) {
+    var pattern = new RegExp(/^09\d{8}$/);
+    //alert('isMobile: '+text.match(pattern))
+    return text.match(pattern)
+}
+
+function isTel(text) {
+    var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8}$/);
+    //alert('isTel: '+text.match(pattern))
+    return text.match(pattern)
+}
+
+function hasExtension(text) {
+    var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8},\d{3,4}$/);
+    //alert('hasExtension: '+text.match(pattern))
+    return text.match(pattern)
+}
+
+function localnumber(text) {
+    var pattern = new RegExp(/\d{4}$/);
+    //alert('hasExtension: '+text.match(pattern))
+    return text.match(pattern)
 }
 
 function checkStatus() {

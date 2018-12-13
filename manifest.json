@@ -37,7 +37,9 @@
           "css": ["/pages/css/air.css"],
           "run_at": "document_end"
         }
-      ]
-
-
+    ]
+      ,
+      "web_accessible_resources":[
+          "images/images24.png"
+        ]
 }
