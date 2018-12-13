@@ -16,8 +16,8 @@ $(document).mousedown(function () {
         $("#gtx-call").remove();
 });
 $(document).mouseup(function () {
-    if (inIcon)
-        $("#gtx-call").remove();
+    if (inIcon);  
+        $("#gtx-call").remove();    
 });
 chrome.storage.local.get({
     stationid: '',
@@ -166,7 +166,62 @@ function getToken(name, password, callback) {
         }
     });
 }
+function imgCall(){
+    alert(1)
+    $("#gtx-call").remove();
+    chrome.storage.local.get({
+        stationid: '',
+        name: '',
+        caserverurl: '',
+        token: ''
+    }, function (items) {
+        console.log(items.stationid);
+        console.log(items.destinationid);
+        console.log(items.name);
+        stationid = items.stationid;
+        destinationid = text;
+        name = items.name;
+        caserverurl = items.caserverurl;
+        Mytoken = items.token;
+        if (stationid !== '' && name !== '' && caserverurl !== '') {
+            $.ajax({
+                url: caserverurl + '/makecall', //https://tstiticctcstest.herokuapp.com/phone
+                headers: {
+                    'accept': 'application/json',
+                    'x-access-token': Mytoken,
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': "*",
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+                    'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+                },
+                type: 'POST',
+                data: JSON.stringify({
+                    stationid: stationid,
+                    destinationid: destinationid,
+                    name: name
+                }),
+                dataType: 'json',
+                success: function (reg) {
+                    console.log(JSON.stringify(reg));
+                    chrome.storage.local.set({ //若成功撥出，儲存選取的號碼
+                        destinationid: destinationid,
+                    }, function () {
+                        // Update status to let user know options were saved.
+                    });
+                },
+                error: function (reg) {
 
+                }
+            });
+        } else {
+
+            alert('你未設定撥號話機，請設定撥號話機');
+            chrome.runtime.sendMessage({
+                noset: 'noset'
+            }, function (response) {});
+        }
+    });
+}
 function getselecttext() {
 
     var e = event || window.event;
@@ -196,8 +251,6 @@ function getselecttext() {
                 console.log(response.farewell);
                 var imgURL = chrome.runtime.getURL("images/images24.png");
                 console.log(imgURL)
-
-
                 $('body').append(
                     $(document.createElement('div')) //on
                     .attr('id', "gtx-call")
@@ -205,7 +258,7 @@ function getselecttext() {
                     .append(
                         $(document.createElement('div')) //on
                         .attr('id', "gtx-call-icon")
-                        .append("<img src=" + imgURL + ">")
+                        .append('<a href="javascript:void(0);"><img src="' + imgURL + '"></a>')
                         .hover(function () {
                             inIcon = true;
                             console.log('in')
@@ -214,7 +267,6 @@ function getselecttext() {
                             console.log('out')
                         })
                         .mouseup(function () {
-                            //if (text != "" && (isMobile(text) || isTel(text) || hasExtension(text) || localnumber(text))) {
                             chrome.storage.local.get({
                                 stationid: '',
                                 name: '',
@@ -222,7 +274,6 @@ function getselecttext() {
                                 token: ''
                             }, function (items) {
                                 console.log(items.stationid);
-                                console.log(items.destinationid);
                                 console.log(items.name);
                                 stationid = items.stationid;
                                 destinationid = text;
@@ -267,7 +318,6 @@ function getselecttext() {
                                     }, function (response) {});
                                 }
                             });
-                            //}
                         })
 
                     )
@@ -285,25 +335,21 @@ function getselecttext() {
 
 function isMobile(text) {
     var pattern = new RegExp(/^09\d{8}$/);
-    //alert('isMobile: '+text.match(pattern))
     return text.match(pattern)
 }
 
 function isTel(text) {
     var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8}$/);
-    //alert('isTel: '+text.match(pattern))
     return text.match(pattern)
 }
 
 function hasExtension(text) {
     var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8},\d{3,4}$/);
-    //alert('hasExtension: '+text.match(pattern))
     return text.match(pattern)
 }
 
 function localnumber(text) {
-    var pattern = new RegExp(/\d{4}$/);
-    //alert('hasExtension: '+text.match(pattern))
+    var pattern = new RegExp(/^\d{4}$/);
     return text.match(pattern)
 }
 
