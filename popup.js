@@ -7,6 +7,11 @@ var password = '';
 var secondcount = 0;
 var Mytoken = '';
 var changeevent;
+
+var userAgent = navigator.userAgent; 
+var isChrome = userAgent.indexOf("Chrome") > -1 ; //判斷Chrome
+var isEdge = userAgent.indexOf("Edge") > -1; //判斷Edge
+var isFX = userAgent.indexOf("Firefox") > -1; //判斷FireFox
 chrome.storage.local.get({
     stationid: '',
     destinationid: '',
@@ -24,7 +29,18 @@ chrome.storage.local.get({
     checkStatus(); //一啟動就執行checkStatus
 });
 
-
+if(isChrome){ //判斷Chrome
+    $('#bootstrapcss').attr('href', 'assets/bootstrap/css/bootstrap.css');
+    $('#fontcss').attr('href', 'assets/font-awesome/css/font-awesome.min.css');
+    $('#formelement').attr('href', 'assets/css/form-elements.css');
+    $('#stylecss').attr('href', 'assets/css/style.css');
+} else if(isEdge) { //判斷Edge
+    alert('edge');
+} else if(isFX){ //判斷FireFox
+    alert('firefox');
+} else{
+    alert('僅支援Crome、Firefox和Edge');
+}
 
 function getToken(name, password, callback) {
     $.ajax({

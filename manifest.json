@@ -1,6 +1,7 @@
 {
     "name": "CaServer Chrome Extension",
     "version": "1.0",
+    "author": "13123",
     "description": "tsti大世科 CaServer Chrome Extension",
     "permissions": ["storage", "contextMenus", "activeTab","http://localhost/*","http://127.0.0.1/*","http://127.0.0.1:1337/*","http://127.0.0.1/*"],
     "background": {
