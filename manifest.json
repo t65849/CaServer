@@ -3,9 +3,9 @@
     "version": "1.0",
     "author": "13123",
     "description": "tsti大世科 CaServer Chrome Extension",
-    "permissions": ["storage", "contextMenus", "activeTab","http://localhost/*","http://127.0.0.1/*","http://127.0.0.1:1337/*","http://127.0.0.1/*"],
+    "permissions": ["storage", "contextMenus", "activeTab","http://*/*","https://*/*"],
     "background": {
-        "scripts": ["background.js","/pages/scripts/jquery/jquery-1.9.0.min.js"],
+        "scripts": ["background.js","/pages/scripts/jquery/jquery-2.1.0.min.js"],
         "persistent": true
     },
     "browser_action": {
@@ -24,6 +24,10 @@
         "128": "images/images128.png"
     },
     "options_page": "options.html",
+    "options_ui": {
+        "page": "options.html",
+        "browser_style": true
+      },
     "manifest_version": 2,
     "content_scripts": [
         {
@@ -35,7 +39,6 @@
             "/pages/scripts/jquery/jquery-1.9.0.min.js",
             "event.js"
           ],
-          "css": ["/pages/css/air.css"],
           "run_at": "document_end"
         }
     ]

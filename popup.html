@@ -8,8 +8,8 @@ found in the LICENSE file. -->
   <style>
 
   </style>
- <link rel="stylesheet" href="/pages/css/popup.css" type="text/css" />
-
+  <!--<link rel="stylesheet" href="/pages/css/popup.css" type="text/css" />-->
+  <link id="popupCss" rel="stylesheet" href="" type="text/css" />
   <!-- CSS -->
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
   <!--<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">-->
@@ -23,24 +23,25 @@ found in the LICENSE file. -->
 </head>
 
 <body>
-    <div class="container">
-  <div class="form-bottom">
-  <label class="sr-only-focusable" for="form-active-name" style="color:#121B82">目標號碼:</label>
-  <input type="number" id="destinationid">
-  <!--目標號碼-->
-  <button type="submit" id='makecall' class="btn">打電話</button>
-  <button type="submit" id='holdcall' class="btn" style="display:none">保留</button>
-  <button type="submit" id='retrievecall' class="btn" style="display:none">接回</button>
-  <button type="submit" id='endcall' class="btn" style="display:none">掛斷</button>
-  <p id='showtext' style="color:yellow"></p><br/>
-  <div>
-      <a href="options.html" target = "_blank" id="optionhref"><img src="/images/option.jpeg" alt="選項" id="dataoption" border="0"></a>
-  </div>
-</div>
+  <div class="container">
+    <div class="form-bottom">
+    <label class="sr-only-focusable" for="form-active-name" style="color:#121B82">目標號碼:</label>
+      <input type="text" id="destinationid">
+      <!--目標號碼-->
+      <button type="submit" id='makecall' class="btn">打電話</button>
+      <button type="submit" id='holdcall' class="btn" style="display:none">保留</button>
+      <button type="submit" id='retrievecall' class="btn" style="display:none">接回</button>
+      <button type="submit" id='endcall' class="btn" style="display:none">掛斷</button>
+      <p id='showtext' style="color:yellow"></p><br />
+      <div>
+        <a href="options.html" target="_blank" id="optionhref"><img src="/images/option.jpeg" alt="選項" id="dataoption"
+            border="0"></a>
+      </div>
     </div>
+  </div>
   <!-- link to non-persistent background script -->
   <script type="text/javascript" src="/pages/scripts/jquery/jquery-1.9.0.min.js"></script>
-  <script type="text/javascript" src="popup.js"></script> 
+  <script type="text/javascript" src="popup.js"></script>
 </body>
 
 </html>

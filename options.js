@@ -1,4 +1,32 @@
 // Saves options to chrome.storage
+var ua = window.navigator.userAgent;
+var isIE = window.ActiveXObject != undefined && ua.indexOf("MSIE") != -1; //判斷Edge
+var isFirefox = ua.indexOf("Firefox") != -1; //判斷FireFox
+var isOpera = window.opr != undefined;
+var isChrome = ua.indexOf("Chrome") && window.chrome; //判斷Chrome
+var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
+if (isFirefox) { //判斷FireFox
+    $('#bootstrapcss').attr('href', 'assets_Firefox/bootstrap/css/bootstrap.css');
+    $('#fontcss').attr('href', 'assets_Firefox/font-awesome/css/font-awesome.min.css');
+    $('#formelement').attr('href', 'assets_Firefox/css/form-elements.css');
+    $('#stylecss').attr('href', 'assets_Firefox/css/style.css');
+    console.log('firefox')
+} else if (isIE) { //判斷Edge
+    $('#bootstrapcss').attr('href', 'assets_Edge/bootstrap/css/bootstrap.css');
+    $('#fontcss').attr('href', 'assets_Edge/font-awesome/css/font-awesome.min.css');
+    $('#formelement').attr('href', 'assets_Edge/css/form-elements.css');
+    $('#stylecss').attr('href', 'assets_Edge/css/style.css');
+    console.log('edge')
+} else if (isChrome) { //判斷Chrome
+    console.log('Chrome')
+    $('#bootstrapcss').attr('href', 'assets_Chrome/bootstrap/css/bootstrap.css');
+    $('#fontcss').attr('href', 'assets_Chrome/font-awesome/css/font-awesome.min.css');
+    $('#formelement').attr('href', 'assets_Chrome/css/form-elements.css');
+    $('#stylecss').attr('href', 'assets_Chrome/css/style.css');
+} else {
+    alert('僅支援Crome、Firefox和Edge');
+}
+
 function save_options() {
     var stationid = document.getElementById('stationid').value;
     var caserverurl = document.getElementById('caserverurl').value;
@@ -12,26 +40,47 @@ function save_options() {
     if (stationid !== '' && name !== '' && caserverurl !== '' && password !== '') {
         getToken(name, password, caserverurl, function (reg) {
             if (reg.success) {
-                chrome.storage.local.set({
-                    stationid: stationid,
-                    caserverurl: caserverurl,
-                    name: name,
-                    password: password,
-                    token: reg.token
-                }, function () {
-                    // Update status to let user know options were saved.
-                    alert('已儲存成功');
-                    window.open('', '_self', '');
-                    window.close();
-                    /*var status = document.getElementById('status');
-                    status.textContent = '已儲存';
-                    setTimeout(function() {
-                        status.textContent = '';
-                    }, 1500);*/
-                });
-           } else
+                if (isChrome) {
+                    chrome.storage.local.set({
+                        stationid: stationid,
+                        caserverurl: caserverurl,
+                        name: name,
+                        password: password,
+                        token: reg.token
+                    }, function () {
+                        // Update status to let user know options were saved.
+                        alert('已儲存成功');
+                        window.open('', '_self', '');
+                        window.close();
+                        /*var status = document.getElementById('status');
+                        status.textContent = '已儲存';
+                        setTimeout(function() {
+                            status.textContent = '';
+                        }, 1500);*/
+                    });
+                } else {
+                    browser.storage.local.set({
+                        stationid: stationid,
+                        caserverurl: caserverurl,
+                        name: name,
+                        password: password,
+                        token: reg.token
+                    }, function () {
+                        // Update status to let user know options were saved.
+                        alert('已儲存成功');
+                        window.open('', '_self', '');
+                        window.close();
+                        /*var status = document.getElementById('status');
+                        status.textContent = '已儲存';
+                        setTimeout(function() {
+                            status.textContent = '';
+                        }, 1500);*/
+                    });
+                }
+
+            } else
                 alert(reg.message + "........");
-            })
+        })
     } else {
         alert('請填寫全部資料');
     }
@@ -40,17 +89,33 @@ function save_options() {
 // Restores select box and checkbox state using the preferences stored in chrome.storage.
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
-    chrome.storage.local.get({
-        stationid: '',
-        caserverurl: '',
-        name: '',
-        password: ''
-    }, function (items) {
-        document.getElementById('stationid').value = items.stationid;
-        document.getElementById('caserverurl').value = items.caserverurl;
-        document.getElementById('name').value = items.name;
-        document.getElementById('password').value = items.password;
-    });
+    if(isChrome){
+        chrome.storage.local.get({
+            stationid: '',
+            caserverurl: '',
+            name: '',
+            password: ''
+        }, function (items) {
+            document.getElementById('stationid').value = items.stationid;
+            document.getElementById('caserverurl').value = items.caserverurl;
+            document.getElementById('name').value = items.name;
+            document.getElementById('password').value = items.password;
+        });
+    }
+    else{
+        browser.storage.local.get({
+            stationid: '',
+            caserverurl: '',
+            name: '',
+            password: ''
+        }, function (items) {
+            document.getElementById('stationid').value = items.stationid;
+            document.getElementById('caserverurl').value = items.caserverurl;
+            document.getElementById('name').value = items.name;
+            document.getElementById('password').value = items.password;
+        });
+    }
+    
 }
 
 function getToken(name, password, caserverurl, callback) {

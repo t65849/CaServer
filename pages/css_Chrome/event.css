@@ -1,0 +1,12 @@
+#gtx-call-icon {
+    width: 24px;
+    height: 24px;
+    background-image: url(chrome-extension://ghdnhcpkfbebehpefomcflgmfdkfpbnf/images/images24.png);
+    background-color: green;  
+    background-position:center;
+}
+#gtx-call{
+    width: 25px;
+    height: 25px;
+    border: 2px black;
+}
