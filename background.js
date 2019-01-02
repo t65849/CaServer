@@ -1,14 +1,17 @@
 //createMenus();
 var testt = false;
-
+var text = "";
 var ua = window.navigator.userAgent;
-var isIE = window.ActiveXObject != undefined && ua.indexOf("MSIE") != -1; //判斷Edge
+var isEdge = ua.indexOf("Edge") != -1; //判斷Edge
 var isFirefox = ua.indexOf("Firefox") != -1; //判斷FireFox
 var isOpera = window.opr != undefined;
-var isChrome = ua.indexOf("Chrome") && window.chrome; //判斷Chrome
+var isChrome = ua.indexOf("Chrome") != -1 && window.chrome; //判斷Chrome
 var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
 
-
+/*
+if (isChrome) {
+    browser = chrome;
+}*/
 function genericOnClick(info, tab) {
     var number_destinationid = (info.selectionText ? info.selectionText : ""); //滑鼠選起來的號碼
     number_destinationid = number_destinationid.trim();
@@ -17,142 +20,87 @@ function genericOnClick(info, tab) {
 }
 
 function createMenus() {
-    if (isChrome) {
-        var parent = chrome.contextMenus.create({
-            "title": "使用分機撥打電話給%s", //撥打分機給Chrome Extension
-            "contexts": ['all'],
-            "onclick": genericOnClick
-        });
-    } else {
-        var parent = browser.contextMenus.create({
-            "title": "使用分機撥打電話給%s", //撥打分機給browser Extension
-            "contexts": ['all'],
-            "onclick": genericOnClick
-        });
-    }
+    var parent = browser.contextMenus.create({
+        "title": "使用分機撥打電話給" + text, //撥打分機給browser Extension
+        "contexts": ['all'],
+        "onclick": genericOnClick
+    });
 
     // 使用chrome.contextMenus.create的方法回傳值是項目的id
     console.log(parent);
 }
 
 function callout(destination) {
-    if(isChrome){
-        chrome.storage.local.get({
-            stationid: '',
-            destinationid: '',
-            name: '',
-            caserverurl: '',
-            token: ''
-        }, function (items) {
-            console.log(items.stationid);
-            console.log(items.destinationid);
-            console.log(items.name);
-            var stationid = items.stationid;
-            var destinationid = destination;
-            var name = items.name;
-            var caserverurl = items.caserverurl;
-            var Mytoken = items.token;
-            if (stationid !== '' && name !== '' && caserverurl !== '') {
-                $.ajax({
-                    url: caserverurl + '/makecall', //https://tstiticctcstest.herokuapp.com/phone
-                    headers: {
-                        'accept': 'application/json',
-                        'x-access-token': Mytoken,
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': "*",
-                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-                        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
-                    },
-                    type: 'POST',
-                    data: JSON.stringify({
-                        stationid: stationid,
+
+    browser.storage.local.get({
+        stationid: '',
+        destinationid: '',
+        name: '',
+        caserverurl: '',
+        token: ''
+    }, function (items) {
+        console.log(items.stationid);
+        console.log(items.destinationid);
+        console.log(items.name);
+        var stationid = items.stationid;
+        var destinationid = destination;
+        var name = items.name;
+        var caserverurl = items.caserverurl;
+        var Mytoken = items.token;
+        if (stationid !== '' && name !== '' && caserverurl !== '') {
+            $.ajax({
+                url: caserverurl + '/makecall', //https://tstiticctcstest.herokuapp.com/phone
+                headers: {
+                    'accept': 'application/json',
+                    'x-access-token': Mytoken,
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': "*",
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+                    'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+                },
+                type: 'POST',
+                data: JSON.stringify({
+                    stationid: stationid,
+                    destinationid: destinationid,
+                    name: name
+                }),
+                dataType: 'json',
+                success: function (reg) {
+                    console.log(JSON.stringify(reg));
+                    $('#endcall').toggle();
+                    browser.storage.local.set({ //若成功撥出，儲存選取的號碼
                         destinationid: destinationid,
-                        name: name
-                    }),
-                    dataType: 'json',
-                    success: function (reg) {
-                        console.log(JSON.stringify(reg));
-                        $('#endcall').toggle();
-                        chrome.storage.local.set({ //若成功撥出，儲存選取的號碼
-                            destinationid: destinationid,
-                        }, function () {
-                            // Update status to let user know options were saved.
-                        });
-                    },
-                    error: function (reg) {
-                        $('#showtext').text("連線失敗!");
-                        //return callout(destination);
-                    }
-                });
-            } else {
-                alert('你未設定撥號話機，請設定撥號話機');
-                chrome.tabs.create({
-                    url: chrome.extension.getURL('options.html')
-                });
-            }
-        });
-    }
-    else{
-        browser.storage.local.get({
-            stationid: '',
-            destinationid: '',
-            name: '',
-            caserverurl: '',
-            token: ''
-        }, function (items) {
-            console.log(items.stationid);
-            console.log(items.destinationid);
-            console.log(items.name);
-            var stationid = items.stationid;
-            var destinationid = destination;
-            var name = items.name;
-            var caserverurl = items.caserverurl;
-            var Mytoken = items.token;
-            if (stationid !== '' && name !== '' && caserverurl !== '') {
-                $.ajax({
-                    url: caserverurl + '/makecall', //https://tstiticctcstest.herokuapp.com/phone
-                    headers: {
-                        'accept': 'application/json',
-                        'x-access-token': Mytoken,
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': "*",
-                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-                        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
-                    },
-                    type: 'POST',
-                    data: JSON.stringify({
-                        stationid: stationid,
-                        destinationid: destinationid,
-                        name: name
-                    }),
-                    dataType: 'json',
-                    success: function (reg) {
-                        console.log(JSON.stringify(reg));
-                        $('#endcall').toggle();
-                        browser.storage.local.set({ //若成功撥出，儲存選取的號碼
-                            destinationid: destinationid,
-                        }, function () {
-                            // Update status to let user know options were saved.
-                        });
-                    },
-                    error: function (reg) {
-                        $('#showtext').text("連線失敗!");
-                        //return callout(destination);
-                    }
-                });
-            } else {
+                    }, function () {
+                        // Update status to let user know options were saved.
+                    });
+                },
+                error: function (reg) {
+                    $('#showtext').text("連線失敗!");
+                    //return callout(destination);
+                }
+            });
+        } else {
+            if (isFirefox) {
                 //alert('你未設定撥號話機，請設定撥號話機');
                 console.log("你未設定撥號話機，請設定撥號話機")
                 browser.tabs.query({
                     currentWindow: true,
                     active: true
                 }).then(sendMessageToTabs).catch(onError);
+            } else {
+                alert('你未設定撥號話機，請設定撥號話機');
+                browser.tabs.create({
+                    url: chrome.extension.getURL('options.html')
+                });
+
             }
-        });
-    }
-    
+
+        }
+    });
 };
+
 function sendMessageToTabs(tabs) {
+    console.log(sendMessageToTabs);
     for (let tab of tabs) {
         browser.tabs.sendMessage(
             tab.id, {
@@ -168,76 +116,58 @@ function sendMessageToTabs(tabs) {
     }
 }
 
-if(isChrome){
-    chrome.runtime.onInstalled.addListener(function () {
-        chrome.runtime.onMessage.addListener(
-            function (request, sender, sendResponse) {
-                /*chrome.storage.sync.set({
-                    text: request.text
-                }, function () {
-    
-                });*/
-                console.log("The color is green.");
-                console.log(sender.tab ?
-                    "来自内容脚本：" + sender.tab.url :
-                    "来自扩展程序");
-                console.log(request.text);
-    
-                if (request.noset == 'noset') {
-                    chrome.tabs.create({
-                        url: chrome.extension.getURL('options.html')
-                    });
-                }
-                if (request.text != "") {
-                    //createMenus();
-                    if (testt == false) {
-                        createMenus();
-                        testt = true;
-                        text = "";
-                    }
-                } else
-                    chrome.contextMenus.removeAll(function () {
-                        testt = false
-                    });
-    
-                sendResponse({
-                    farewell: "已收到: " + request.text
+browser.runtime.onInstalled.addListener(function () {
+    browser.runtime.onMessage.addListener(
+        function (request, sender, sendResponse) {
+
+            console.log(request.text);
+
+            if (request.noset == 'noset') {
+                browser.tabs.create({
+                    url: browser.extension.getURL('options.html')
                 });
+            }
+            text = request.text.trim().replace('-', '');
+            text = text.replace('-', '');
+            text = text.replace('(', '');
+            text = text.replace(')', '');
+            text = text.replace('#', ',');
+            if (isMobile(text) || isTel(text) || hasExtension(text) || localnumber(text)) {
+                //createMenus();
+                if (testt == false) {
+                    createMenus();
+                    testt = true;
+                }
+            } else
+                browser.contextMenus.removeAll(function () {
+                    testt = false
+                });
+            sendResponse({
+                farewell: "已收到: " + request.text
             });
-    });
+        });
+});
+
+function isMobile(text) {
+    var pattern = new RegExp(/^09\d{8}$/);
+    //alert('isMobile: '+text.match(pattern))
+    return text.match(pattern)
 }
-else{
-    browser.runtime.onInstalled.addListener(function () {
-        browser.runtime.onMessage.addListener(
-            function (request, sender, sendResponse) {
-                console.log(sender.tab ?
-                    "来自内容脚本：" + sender.tab.url :
-                    "来自扩展程序");
-                console.log(request.text);
-                if (request.noset == 'noset') {
-                    browser.tabs.create({
-                        url: browser.extension.getURL('options.html')
-                    });
-                }
-                var text = request.text.trim().replace('-', '');
-                text = text.replace('-', '');
-                text = text.replace('(', '');
-                text = text.replace(')', '');
-                text = text.replace('#', ',');
-                if (request.text != "") {
-                    //createMenus();
-                    if (testt == false) {
-                        createMenus();
-                        testt = true;
-                        text = "";
-                    }
-                } else
-                    browser.contextMenus.removeAll(function () {
-                        testt = false
-                    });
-                sendResponse({
-                    farewell: "已收到: " + request.text
-                });
-            });
-    });
+
+function isTel(text) {
+    var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8}$/);
+    //alert('isTel: '+text.match(pattern))
+    return text.match(pattern)
+}
+
+function hasExtension(text) {
+    var pattern = new RegExp(/^0(2|3|37|4|49|5|6|7|8|82|89|826|836)\d{7,8},\d{3,4}$/);
+    //alert('hasExtension: '+text.match(pattern))
+    return text.match(pattern)
+}
+
+function localnumber(text) {
+    var pattern = new RegExp(/\d{4}$/);
+    //alert('hasExtension: '+text.match(pattern))
+    return text.match(pattern)
 }
