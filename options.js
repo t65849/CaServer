@@ -1,23 +1,59 @@
-// Saves options to chrome.storage
-var ua = window.navigator.userAgent;
-var isEdge = ua.indexOf("Edge") != -1; //判斷Edge
-var isFirefox = ua.indexOf("Firefox") != -1; //判斷FireFox
-var isOpera = window.opr != undefined;
-var isChrome = ua.indexOf("Chrome") != -1 && window.chrome; //判斷Chrome
-var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
-if (isFirefox) { //判斷FireFox
+function getBroswer() {
+    var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    var s;
+    (s = ua.match(/edge\/([\d.]+)/)) ? Sys.edge = s[1]:
+        (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1] :
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+        (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+        (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+        (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+        (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+
+    if (Sys.edge) return {
+        broswer: "Edge",
+        version: Sys.edge
+    };
+    if (Sys.ie) return {
+        broswer: "IE",
+        version: Sys.ie
+    };
+    if (Sys.firefox) return {
+        broswer: "Firefox",
+        version: Sys.firefox
+    };
+    if (Sys.chrome) return {
+        broswer: "Chrome",
+        version: Sys.chrome
+    };
+    if (Sys.opera) return {
+        broswer: "Opera",
+        version: Sys.opera
+    };
+    if (Sys.safari) return {
+        broswer: "Safari",
+        version: Sys.safari
+    };
+
+    return {
+        broswer: "",
+        version: "0"
+    };
+}
+var myBrowser = getBroswer();
+if (myBrowser.broswer == "Firefox") { //判斷FireFox
     $('#bootstrapcss').attr('href', 'assets_Firefox/bootstrap/css/bootstrap.css');
     $('#fontcss').attr('href', 'assets_Firefox/font-awesome/css/font-awesome.min.css');
     $('#formelement').attr('href', 'assets_Firefox/css/form-elements.css');
     $('#stylecss').attr('href', 'assets_Firefox/css/style.css');
     console.log('firefox')
-} else if (isEdge) { //判斷Edge
+} else if (myBrowser.broswer == "Edge") { //判斷Edge
     $('#bootstrapcss').attr('href', 'assets_Edge/bootstrap/css/bootstrap.css');
     $('#fontcss').attr('href', 'assets_Edge/font-awesome/css/font-awesome.min.css');
     $('#formelement').attr('href', 'assets_Edge/css/form-elements.css');
     $('#stylecss').attr('href', 'assets_Edge/css/style.css');
     console.log('edge')
-} else if (isChrome) { //判斷Chrome
+} else if (myBrowser.broswer == "Chrome") { //判斷Chrome
     console.log('Chrome')
     $('#bootstrapcss').attr('href', 'assets_Chrome/bootstrap/css/bootstrap.css');
     $('#fontcss').attr('href', 'assets_Chrome/font-awesome/css/font-awesome.min.css');
@@ -27,12 +63,10 @@ if (isFirefox) { //判斷FireFox
     alert('僅支援Crome、Firefox和Edge');
 }
 
-/*
-if (isChrome) {
+if (myBrowser.broswer == "Chrome") {
     console.log("browser = chrome")
-    console.log(chrome)
     var browser = chrome;
-}*/
+}
 
 function save_options() {
     var stationid = document.getElementById('stationid').value;

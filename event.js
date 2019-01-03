@@ -11,30 +11,59 @@ var inIcon = false;
 var xx;
 var yy;
 
-var ua = window.navigator.userAgent;
-var isEdge = ua.indexOf("Edge") != -1; //判斷Edge
-var isFirefox = ua.indexOf("Firefox") != -1; //判斷FireFox
-var isOpera = window.opr != undefined;
-var isChrome = ua.indexOf("Chrome") != -1 && window.chrome; //判斷Chrome
-var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
+function getBroswer() {
+    var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    var s;
+    (s = ua.match(/edge\/([\d.]+)/)) ? Sys.edge = s[1]:
+        (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1] :
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+        (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+        (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+        (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+        (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
 
-if (isFirefox) { //判斷FireFox
+    if (Sys.edge) return {
+        broswer: "Edge",
+        version: Sys.edge
+    };
+    if (Sys.ie) return {
+        broswer: "IE",
+        version: Sys.ie
+    };
+    if (Sys.firefox) return {
+        broswer: "Firefox",
+        version: Sys.firefox
+    };
+    if (Sys.chrome) return {
+        broswer: "Chrome",
+        version: Sys.chrome
+    };
+    if (Sys.opera) return {
+        broswer: "Opera",
+        version: Sys.opera
+    };
+    if (Sys.safari) return {
+        broswer: "Safari",
+        version: Sys.safari
+    };
+
+    return {
+        broswer: "",
+        version: "0"
+    };
+}
+var myBrowser = getBroswer();
+if (myBrowser.broswer == "Firefox") { //判斷FireFox
     console.log('firefox')
 }
-if (isEdge) { //判斷Edge
+if (myBrowser.broswer == "Edge") { //判斷Edge
     console.log('edge')
 }
-if (isChrome) { //判斷Chrome
+if (myBrowser.broswer == "Chrome") { //判斷Chrome
     console.log('Chrome')
+    browser = chrome;
 }
-
-
-if (isChrome) {
-    console.log("browser = chrome")
-    console.log(chrome)
-    var browser = chrome;
-}
-
 $(document).click(function () {
     console.log("$(document).click")
     //if (!isEdge)
@@ -75,17 +104,17 @@ $(document).ready(function () {
         if ($('#destinationid').val() != '') {
             if (name === '' || stationid === '' || caserverurl === '' || password === '') {
                 alert('你未設定撥號話機，請設定撥號話機');
-                if (isChrome || isEdge) {
+                if (myBrowser.broswer == "Firefox") {
+                    var sending = browser.runtime.sendMessage({
+                        noset: 'noset'
+                    });
+                    sending.then(handleResponse, handleError);
+                } else {
                     browser.runtime.sendMessage({
                         noset: 'noset'
                     }, function (response) {
                         console.log(response.farewell);
                     });
-                } else {
-                    var sending = browser.runtime.sendMessage({
-                        noset: 'noset'
-                    });
-                    sending.then(handleResponse, handleError);
                 }
 
             } else {
@@ -227,7 +256,7 @@ function myclickpic(evnt) { //這裡打 evnt 不是打 event
 function callimg() {
     setTimeout(function () {
         var t;
-        if (isChrome) {
+        if (myBrowser.broswer == "Chrome") {
             if (window.getSelection) {
                 t = window.getSelection();
             } else if (document.getSelection) {
@@ -240,14 +269,13 @@ function callimg() {
                 t = window.getSelection();
             } else if (document.getSelection && document.getSelection() != '') {
                 t = document.getSelection();
-    
+
             } else if (document.activeElement.value != null) {
                 console.log(document.activeElement.value)
                 t = document.activeElement.value.substring(
                     document.activeElement.selectionStart,
                     document.activeElement.selectionEnd);
-            } 
-            else{
+            } else {
                 t = "";
             }
             /*
@@ -267,7 +295,12 @@ function callimg() {
         text = text.replace('#', ',');
 
         if (isMobile(text) || isTel(text) || hasExtension(text) || localnumber(text)) {
-            if (isChrome || isEdge) {
+            if (myBrowser.broswer == "Firefox") {
+                var sending = browser.runtime.sendMessage({
+                    text: String(text)
+                });
+                sending.then(handleResponse, handleError);
+            } else {
                 var imgURL = browser.runtime.getURL("images/images24.png");
                 //console.log(imgURL)
                 $('body').append(
@@ -340,23 +373,18 @@ function callimg() {
 
                     )
                 )
-            } else {
-                var sending = browser.runtime.sendMessage({
-                    text: String(text)
-                });
-                sending.then(handleResponse, handleError);
             }
         } else {
             console.log("not phone")
-            if (isChrome || isEdge) {
-                browser.runtime.sendMessage({
-                    text: ""
-                })
-            } else {
+            if (myBrowser.broswer == "Firefox") {
                 var sending = browser.runtime.sendMessage({
                     text: ""
                 });
                 sending.then(handleResponse1, handleError);
+            } else {
+                browser.runtime.sendMessage({
+                    text: ""
+                })
             }
 
         }
@@ -366,7 +394,7 @@ function callimg() {
 
 function getselecttext() {
     var t;
-    if (isChrome) {
+    if (myBrowser.broswer == "Chrome") {
         if (window.getSelection) {
             t = window.getSelection();
         } else if (document.getSelection) {
@@ -385,29 +413,28 @@ function getselecttext() {
             t = document.activeElement.value.substring(
                 document.activeElement.selectionStart,
                 document.activeElement.selectionEnd);
-        } 
-        else{
+        } else {
             t = "";
         }
     }
     console.log(String(t))
-    if (isChrome || isEdge) {
+    if (myBrowser.broswer == "Firefox") {
+        console.log("isFirefox send Message to background")
+        var sending = browser.runtime.sendMessage({
+            text: String(t)
+        });
+        sending.then(handleResponse1, handleError);
+    } else {
         console.log("isChrome || isEdge send Message to background")
         browser.runtime.sendMessage({
             text: String(t)
         }, function (response) {
             console.log(response.farewell)
         })
-    } else {
-        console.log("isFirefox send Message to background")
-        var sending = browser.runtime.sendMessage({
-            text: String(t)
-        });
-        sending.then(handleResponse1, handleError);
     }
 
 }
-if (isFirefox) {
+if (myBrowser.broswer == "Firefox") {
     console.log("Create greeting addListener:");
     browser.runtime.onMessage.addListener(request => {
         console.log("Message from the background script:");
@@ -483,16 +510,16 @@ function handleResponse(message) {
                         });
                     } else {
                         alert('你未設定撥號話機，請設定撥號話機');
-                        if (isChrome || isEdge) {
-
-                            browser.runtime.sendMessage({
-                                noset: 'noset'
-                            }, function (response) {});
-                        } else {
+                        if (myBrowser.broswer == "Firefox") {
                             var sending = browser.runtime.sendMessage({
                                 noset: 'noset'
                             });
                             sending.then(handleResponse1, handleError);
+
+                        } else {
+                            browser.runtime.sendMessage({
+                                noset: 'noset'
+                            }, function (response) {});
                         }
                     }
                 });

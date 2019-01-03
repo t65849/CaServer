@@ -1,20 +1,63 @@
 //createMenus();
 var testt = false;
 var text = "";
-var ua = window.navigator.userAgent;
-var isEdge = ua.indexOf("Edge") != -1; //判斷Edge
-var isFirefox = ua.indexOf("Firefox") != -1; //判斷FireFox
-var isOpera = window.opr != undefined;
-var isChrome = ua.indexOf("Chrome") != -1 && window.chrome; //判斷Chrome
-var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
+
+function getBroswer() {
+    var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    var s;
+    (s = ua.match(/edge\/([\d.]+)/)) ? Sys.edge = s[1]:
+        (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1] :
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+        (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+        (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+        (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+        (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+
+    if (Sys.edge) return {
+        broswer: "Edge",
+        version: Sys.edge
+    };
+    if (Sys.ie) return {
+        broswer: "IE",
+        version: Sys.ie
+    };
+    if (Sys.firefox) return {
+        broswer: "Firefox",
+        version: Sys.firefox
+    };
+    if (Sys.chrome) return {
+        broswer: "Chrome",
+        version: Sys.chrome
+    };
+    if (Sys.opera) return {
+        broswer: "Opera",
+        version: Sys.opera
+    };
+    if (Sys.safari) return {
+        broswer: "Safari",
+        version: Sys.safari
+    };
+
+    return {
+        broswer: "",
+        version: "0"
+    };
+}
+var myBrowser = getBroswer();
 
 
-/*
-if (isChrome) {
-    console.log("browser = chrome")
-    console.log(chrome)
-    var browser = chrome;
-}*/
+
+if (myBrowser.broswer == "Firefox") { //判斷FireFox
+    console.log('firefox')
+}
+if (myBrowser.broswer == "Edge") { //判斷Edge
+    console.log('edge')
+}
+if (myBrowser.broswer == "Chrome") { //判斷Chrome
+    console.log('Chrome')
+    browser = chrome;
+}
 
 function genericOnClick(info, tab) {
     var number_destinationid = (info.selectionText ? info.selectionText : ""); //滑鼠選起來的號碼
@@ -86,7 +129,7 @@ function callout(destination) {
                 }
             });
         } else {
-            if (isFirefox) {
+            if (myBrowser.broswer == "Firefox") {
                 //alert('你未設定撥號話機，請設定撥號話機');
                 console.log("你未設定撥號話機，請設定撥號話機")
                 browser.tabs.query({
@@ -143,9 +186,8 @@ browser.runtime.onInstalled.addListener(function () {
                 if (testt == false) {
                     createMenus();
                     testt = true;
-                }
-                else{
-                    browser.contextMenus.update("callMenus",{
+                } else {
+                    browser.contextMenus.update("callMenus", {
                         "title": "使用分機撥打電話給" + text, //撥打分機給browser Extension
                     })
                 }
