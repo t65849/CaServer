@@ -26,9 +26,13 @@ if (isFirefox) { //判斷FireFox
 } else {
     alert('僅支援Crome、Firefox和Edge');
 }
+
+/*
 if (isChrome) {
-    browser = chrome;
-}
+    console.log("browser = chrome")
+    console.log(chrome)
+    var browser = chrome;
+}*/
 
 function save_options() {
     var stationid = document.getElementById('stationid').value;
@@ -72,16 +76,16 @@ function save_options() {
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
     browser.storage.local.get({
-            stationid: '',
-            caserverurl: '',
-            name: '',
-            password: ''
-        }, function (items) {
-            document.getElementById('stationid').value = items.stationid;
-            document.getElementById('caserverurl').value = items.caserverurl;
-            document.getElementById('name').value = items.name;
-            document.getElementById('password').value = items.password;
-        });
+        stationid: '',
+        caserverurl: '',
+        name: '',
+        password: ''
+    }, function (items) {
+        document.getElementById('stationid').value = items.stationid;
+        document.getElementById('caserverurl').value = items.caserverurl;
+        document.getElementById('name').value = items.name;
+        document.getElementById('password').value = items.password;
+    });
 }
 
 function getToken(name, password, caserverurl, callback) {

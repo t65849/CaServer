@@ -27,60 +27,28 @@ if (isEdge) { //判斷Edge
 if (isChrome) { //判斷Chrome
     console.log('Chrome')
 }
-/*
+
+
 if (isChrome) {
-    browser = chrome;
-}*/
-/*
-if (isFirefox) { //判斷FireFox
-    $('#bootstrapcss').attr('href', 'assets_Firefox/bootstrap/css/bootstrap.css');
-    $('#fontcss').attr('href', 'assets_Firefox/font-awesome/css/font-awesome.min.css');
-    $('#formelement').attr('href', 'assets_Firefox/css/form-elements.css');
-    $('#stylecss').attr('href', 'assets_Firefox/css/style.css');
-    console.log('firefox')
-} else if (isEdge) { //判斷Edge
-    $('#bootstrapcss').attr('href', 'assets_Edge/bootstrap/css/bootstrap.css');
-    $('#fontcss').attr('href', 'assets_Edge/font-awesome/css/font-awesome.min.css');
-    $('#formelement').attr('href', 'assets_Edge/css/form-elements.css');
-    $('#stylecss').attr('href', 'assets_Edge/css/style.css');
-    console.log('edge')
-} else if (isChrome) { //判斷Chrome
-    console.log('Chrome')
-    $('#bootstrapcss').attr('href', 'assets_Chrome/bootstrap/css/bootstrap.css');
-    $('#fontcss').attr('href', 'assets_Chrome/font-awesome/css/font-awesome.min.css');
-    $('#formelement').attr('href', 'assets_Chrome/css/form-elements.css');
-    $('#stylecss').attr('href', 'assets_Chrome/css/style.css');
-} else {
-    alert('僅支援Crome、Firefox和Edge');
-}*/
+    console.log("browser = chrome")
+    console.log(chrome)
+    var browser = chrome;
+}
 
 $(document).click(function () {
-    //console.log("$(document).click")
-    if (!isEdge)
-        callimg();
+    console.log("$(document).click")
+    //if (!isEdge)
+    callimg();
     getselecttext();
 });
 $(document).mousedown(function () {
-    //console.log("$(document).mousedown")
+    console.log("$(document).mousedown")
     if (!inIcon)
         $("#gtx-call").remove();
-        /*
-    if (text == "") {
-        if (isChrome || isEdge) {
-            browser.runtime.sendMessage({
-                text: ""
-            })
-        } else {
-            var sending = browser.runtime.sendMessage({
-                text: ""
-            });
-            sending.then(handleResponse1, handleError);
-        }
-    }*/
 });
 //嗨嗨
 $(document).mouseup(function () {
-    //console.log("$(document).mouseup")
+    console.log("$(document).mouseup")
     $("#gtx-call").remove();
     getselecttext();
 });
@@ -272,14 +240,24 @@ function callimg() {
                 t = window.getSelection();
             } else if (document.getSelection && document.getSelection() != '') {
                 t = document.getSelection();
-
-            } else if (document.activeElement.value.substring(
+    
+            } else if (document.activeElement.value != null) {
+                console.log(document.activeElement.value)
+                t = document.activeElement.value.substring(
+                    document.activeElement.selectionStart,
+                    document.activeElement.selectionEnd);
+            } 
+            else{
+                t = "";
+            }
+            /*
+            else if (document.activeElement.value.substring(
                     document.activeElement.selectionStart,
                     document.activeElement.selectionEnd) != '') {
                 t = document.activeElement.value.substring(
                     document.activeElement.selectionStart,
                     document.activeElement.selectionEnd);
-            }
+            }*/
         }
 
         text = String(t).trim().replace('-', '');
@@ -402,22 +380,26 @@ function getselecttext() {
         } else if (document.getSelection && document.getSelection() != '') {
             t = document.getSelection();
 
-        } else if (document.activeElement.value.substring(
-                document.activeElement.selectionStart,
-                document.activeElement.selectionEnd) != '') {
+        } else if (document.activeElement.value != null) {
+            console.log(document.activeElement.value)
             t = document.activeElement.value.substring(
                 document.activeElement.selectionStart,
                 document.activeElement.selectionEnd);
+        } 
+        else{
+            t = "";
         }
     }
     console.log(String(t))
     if (isChrome || isEdge) {
+        console.log("isChrome || isEdge send Message to background")
         browser.runtime.sendMessage({
             text: String(t)
         }, function (response) {
             console.log(response.farewell)
         })
     } else {
+        console.log("isFirefox send Message to background")
         var sending = browser.runtime.sendMessage({
             text: String(t)
         });
@@ -445,7 +427,7 @@ function handleResponse(message) {
     $('body').append(
         $(document.createElement('div')) //on
         .attr('id', "gtx-call")
-        .attr('style', "position: absolute; left: " + x + "px; top: " + y + "px;")
+        .attr('style', "position: absolute; left: " + xx + "px; top: " + yy + "px;")
         .append(
             $(document.createElement('div')) //on
             .attr('id', "gtx-call-icon")

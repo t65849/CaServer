@@ -8,10 +8,14 @@ var isOpera = window.opr != undefined;
 var isChrome = ua.indexOf("Chrome") != -1 && window.chrome; //判斷Chrome
 var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
 
+
 /*
 if (isChrome) {
-    browser = chrome;
+    console.log("browser = chrome")
+    console.log(chrome)
+    var browser = chrome;
 }*/
+
 function genericOnClick(info, tab) {
     var number_destinationid = (info.selectionText ? info.selectionText : ""); //滑鼠選起來的號碼
     number_destinationid = number_destinationid.trim();
@@ -20,7 +24,9 @@ function genericOnClick(info, tab) {
 }
 
 function createMenus() {
+    console.log("createmenus")
     var parent = browser.contextMenus.create({
+        "id": "callMenus",
         "title": "使用分機撥打電話給" + text, //撥打分機給browser Extension
         "contexts": ['all'],
         "onclick": genericOnClick
@@ -90,7 +96,7 @@ function callout(destination) {
             } else {
                 alert('你未設定撥號話機，請設定撥號話機');
                 browser.tabs.create({
-                    url: chrome.extension.getURL('options.html')
+                    url: browser.extension.getURL('options.html')
                 });
 
             }
@@ -137,6 +143,11 @@ browser.runtime.onInstalled.addListener(function () {
                 if (testt == false) {
                     createMenus();
                     testt = true;
+                }
+                else{
+                    browser.contextMenus.update("callMenus",{
+                        "title": "使用分機撥打電話給" + text, //撥打分機給browser Extension
+                    })
                 }
             } else
                 browser.contextMenus.removeAll(function () {

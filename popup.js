@@ -13,9 +13,12 @@ var isFirefox = ua.indexOf("Firefox") != -1; //判斷FireFox
 var isOpera = window.opr != undefined;
 var isChrome = ua.indexOf("Chrome") != -1 && window.chrome; //判斷Chrome
 var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
+/*
 if (isChrome) {
-    browser = chrome;
-}
+    console.log("browser = chrome")
+    console.log(chrome)
+    var browser = chrome;
+}*/
 
 browser.storage.local.get({
     stationid: '',
