@@ -35,7 +35,7 @@
             "https://*/*"
         ],
         "js": [
-            "/pages/scripts/jquery/jquery-1.9.0.min.js",
+            "/pages/scripts/jquery/jquery-2.1.0.min.js",
             "event.js"
         ],
         "run_at": "document_end"

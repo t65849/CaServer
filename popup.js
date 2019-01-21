@@ -50,6 +50,9 @@ function getBroswer() {
         version: "0"
     };
 }
+$(document).ready(function(){
+
+
 var myBrowser = getBroswer();
 if (myBrowser.broswer == "Firefox") { //判斷FireFox
     console.log('firefox')
@@ -95,7 +98,7 @@ if (myBrowser.broswer == "Firefox") { //判斷FireFox
     console.log('edge')
 } else if (myBrowser.broswer == "Chrome") { //判斷Chrome
     console.log('Chrome')
-    $('#bootstrapcss').attr('href', 'assets_Chrome/bootstrap/css/bootstrap.min.css');
+    $('#bootstrapcss').attr('href', 'assets_Chrome/bootstrap/css/bootstrap.css');
     $('#fontcss').attr('href', 'assets_Chrome/font-awesome/css/font-awesome.min.css');
     $('#formelement').attr('href', 'assets_Chrome/css/form-elements.css');
     $('#stylecss').attr('href', 'assets_Chrome/css/style.css');
@@ -103,6 +106,11 @@ if (myBrowser.broswer == "Firefox") { //判斷FireFox
 } else {
     alert('僅支援Crome、Firefox和Edge');
 }
+});
+function chromebody(){
+    $('body').height(100);
+}
+
 
 function getToken(name, password, callback) {
     $.ajax({

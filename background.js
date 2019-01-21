@@ -55,7 +55,7 @@ if (myBrowser.broswer == "Edge") { //判斷Edge
     console.log('edge')
 }
 if (myBrowser.broswer == "Chrome") { //判斷Chrome
-    console.log('Chrome')
+    console.log('Chrome');
     browser = chrome;
 }
 

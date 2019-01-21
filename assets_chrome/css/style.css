@@ -101,13 +101,23 @@ ul.navbar-nav {
 .navbar-inverse ul.navbar-nav li .li-social a:focus { border: 0; color: #66d6c5; }
 
 .navbar-brand {
-	width: 130px;
-	height: 130px;
+	width: 156px;
+	height: 75px;
 	background: url(../img/logo.png) left center no-repeat;
 	text-indent: -99999px;
 }
 
+.logo-bottom{
+	position: absolute;
+	left: 5px;
+	top: 0px;
+	/*bottom: 0px;*/
+}
 
+.rounded-circle {
+	border-radius: 50% !important;
+	border: 1px solid #000000;
+  }
 /***** Top content *****/
 
 .inner-bg {
@@ -176,8 +186,8 @@ ul.navbar-nav {
 
 .form-bottom {
 	padding: 25px 25px 30px 25px;
-	background: #444;
-	background: rgba(0, 0, 0, 0.3);
+	background: #ffffff;
+	background: rgba(0, 0, 0, 0.4);
 	-moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
 	text-align: left;
 }
